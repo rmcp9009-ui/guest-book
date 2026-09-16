@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>글쓰기</title>
+    <style>
+        .class-caption {
+            width: 100px;
+        }
+
+        .class-content {
+            width: 500px;
+        }
+    </style>
+    <script th:inline="javascript">
+        function backToList(frm) {
+            frm.method = "get";
+            frm.action = /*[[@{/book/list}]]*/ "";
+            frm.submit();
+        }
+    </script>
+</head>
+
+<body>
+    <h1 style="text-align: center">글쓰기</h1>
+    <form name="bookForm" method="post" th:action="@{/book/post}">
+        <table border="0" align="center">
+            <tbody>
+                <tr>
+                    <td align="right" valign="top" class="calss-caption">
+                        <br />글내용:
+                    </td>
+                    <td colspan="2">
+                        <textarea name="post" rows="10" maxlength="2000" class="class-content"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" class="calss-caption">작성자:</td>
+                    <td colspan="2">
+                        <input type="text" maxlength="100" name="writer" class="class-content" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"></td>
+                    <td colspan="2">
+                        <input type="submit" value="저장" />
+                        <input type="button" value="목록보기" onclick="backToList(bookForm)" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+
+</html>

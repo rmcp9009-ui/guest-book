@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>글목록</title>
+    <style>
+        .cls2 {
+            text-align: center;
+            font-size: 30px;
+            display: block;
+        }
+
+        .cls1 {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <table align="center" border="1" width="80%">
+        <thead>
+            <tr height="10" align="center" bgcolor="lightgreen">
+                <th>글번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody th:if="${#lists.size(dataList) == 0}">
+            <tr height="10">
+                <td colspan="4">
+                    <p align="center">
+                        <b><span style="font-size: 9pt">등록된 글이 없습니다.</span></b>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+        <tbody th:unless="${#lists.isEmpty(dataList)}">
+            <tr align="center" th:each="post:${dataList}">
+                <td width="5%">[[${postStat.count}]]</td>
+                <td width="10%">[[${post.writer}]]</td>
+                <td align="left" width="35%">[[${post.post}]]</td>
+                <td width="10%">
+                    [[${#temporals.format(post.writeDate, 'yyyy-MM-dd HH:mm:ss')}]]
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a class="cls1" th:href="@{/book/add}"><span class="cls2">글쓰기</span></a>
+</body>
+
+</html>
