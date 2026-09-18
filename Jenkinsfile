@@ -18,12 +18,12 @@ pipeline {
         stage('Docker push') {
             steps {
                 script {
-                    // 보안 경고를 방지하기 위해 표준 stdin 로그인 방식 사용
+                    // 표준 로그인 방식
                     sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
                     
-                    // 계정명/레포지토리명 형식으로 통일 (rmcp9009)
-                    sh 'docker image build --tag rmcp9009/guest-book:2.0 .'
-                    sh 'docker push rmcp9009/guest-book:2.0'
+                    // 🔴 'guest-book'을 실제 레포지토리 이름인 'gbook'으로 변경
+                    sh 'docker image build --tag rmcp9009/gbook:2.0 .'
+                    sh 'docker push rmcp9009/gbook:2.0'
                 }
             }
         }
@@ -34,8 +34,8 @@ pipeline {
                     ssh lastcoder@$JOB_URL '
                     docker stop guest-book
                     docker container rm -f \$(docker container ls -af "name=guest-book" -q)
-                    docker image rm -f \$(docker image ls --filter reference='rmcp9009/guest-book' -q)
-                    docker run --name="guest-book" -d -p 8080:8080 rmcp9009/guest-book:2.0
+                    docker image rm -f \$(docker image ls --filter reference='rmcp9009/gbook' -q)
+                    docker run --name="guest-book" -d -p 8080:8080 rmcp9009/gbook:2.0
                     '												
                     """
                 }								
