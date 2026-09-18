@@ -1,7 +1,7 @@
 pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('jenkins-dockerhub')
-        JOB_URL = '10.0.2.5'
+        JOB_URL = '10.0.2.4' // 🔴 '10.0.2.5'에서 '10.0.2.4'로 변경
     }
     agent any
     
@@ -18,10 +18,7 @@ pipeline {
         stage('Docker push') {
             steps {
                 script {
-                    // 표준 로그인 방식
                     sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
-                    
-                    // 🔴 'guest-book'을 실제 레포지토리 이름인 'gbook'으로 변경
                     sh 'docker image build --tag rmcp9009/gbook:2.0 .'
                     sh 'docker push rmcp9009/gbook:2.0'
                 }
