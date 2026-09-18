@@ -12,4 +12,4 @@ FROM amazoncorretto:25
 WORKDIR /app
 COPY --from=builder /usr/src/guest-book/target/guest-book-0.0.1-SNAPSHOT.jar .
 
-ENTRYPOINT ["java", "-jar", "/app/guest-book-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app/guest_book-0.0.1-SNAPSHOT.jar"]
