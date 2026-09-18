@@ -18,10 +18,7 @@ pipeline {
         stage('Docker push') {
             steps {
                 script {
-                    // 표준 로그인 방식
                     sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
-                    
-                    // 이미지 빌드 및 푸시 (실제 레포지토리인 rmcp9009/gbook 사용)
                     sh 'docker image build --tag rmcp9009/gbook:2.0 .'
                     sh 'docker push rmcp9009/gbook:2.0'
                 }
@@ -30,14 +27,14 @@ pipeline {
         stage('Docker pull') {
             steps {
                 sshagent( credentials: ['server-02'] ) {
-                    // 호스트 키 검증 생략 옵션 추가 및 문법 오류 수정 완료
+                    // 원격 서버 안에서 안전하게 실행되도록 작은따옴표 구조 개선
                     sh '''
-                    ssh -o StrictHostKeyChecking=no lastcoder@$JOB_URL "
+                    ssh -o StrictHostKeyChecking=no lastcoder@$JOB_URL '
                         docker stop guest-book || true
-                        docker container rm -f \$(docker container ls -af 'name=guest-book' -q) || true
-                        docker image rm -f \$(docker image ls --filter reference='rmcp9009/gbook' -q) || true
-                        docker run --name='guest-book' -d -p 8080:8080 rmcp9009/gbook:2.0
-                    "
+                        docker rm -f guest-book || true
+                        docker image rm -f rmcp9009/gbook:2.0 || true
+                        docker run --name="guest-book" -d -p 8080:8080 rmcp9009/gbook:2.0
+                    '
                     '''
                 }								
             }
