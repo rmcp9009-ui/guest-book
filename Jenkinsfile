@@ -1,7 +1,7 @@
 pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('jenkins-dockerhub')
-        JOB_URL = '10.0.2.4' // 🔴 '10.0.2.5'에서 '10.0.2.4'로 변경
+        JOB_URL = '10.0.2.4'
     }
     agent any
     
@@ -18,7 +18,9 @@ pipeline {
         stage('Docker push') {
             steps {
                 script {
+                    // 표준 로그인 방식
                     sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
+                    
                     sh 'docker image build --tag rmcp9009/gbook:2.0 .'
                     sh 'docker push rmcp9009/gbook:2.0'
                 }
@@ -28,7 +30,8 @@ pipeline {
             steps {
                 sshagent( credentials: ['server-02'] ) {
                     sh """
-                    ssh lastcoder@$JOB_URL '
+                    // 🔴 바로 이 부분(ssh 뒤)에 옵션을 추가합니다!
+                    ssh -o StrictHostKeyChecking=no lastcoder@$JOB_URL '
                     docker stop guest-book
                     docker container rm -f \$(docker container ls -af "name=guest-book" -q)
                     docker image rm -f \$(docker image ls --filter reference='rmcp9009/gbook' -q)
